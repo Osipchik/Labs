@@ -1,11 +1,10 @@
 from Sort import Sort
-# from array import array
 import tempfile
 import os
 
 
 class External_sort(object):
-    __TEMP_LINES = 10_000
+    __TEMP_LINES = 1_000_000
     __temp_files = []
 
     def sort_file(self, filename):
@@ -30,15 +29,15 @@ class External_sort(object):
 
     def __create_file(self):
         temp_file = self.__temp_files[0]
-        with open('sorted_numbers.txt', 'w') as f, open(temp_file.name, 'r') as temp:
+        with open('C:\\Users\\ASUS\\PycharmProjects\\sorted_numbers.txt', 'w') as f, open(temp_file.name, 'r') as temp:
             for i, val in enumerate(temp):
                 f.writelines(val)
         self.__remove_temp_file(temp_file)
 
     def __create_temp_file(self, array):
         with tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
-            arr = Sort.merge_sort(array)
-            temp.writelines(f'{i}\n' for i in arr)
+            array = Sort.merge_sort(array)
+            temp.writelines(f'{i}\n' for i in array)
             self.__temp_files.append(temp)
 
     def __sort_temp_files(self):
@@ -67,7 +66,8 @@ class External_sort(object):
         else:
             self.__continue_fill(temp, files[1], second_line)
 
-    def __continue_fill(self, temp, file, line):
+    @staticmethod
+    def __continue_fill(temp, file, line):
         while line:
             temp.writelines(f'{line}')
             line = file.readline()
