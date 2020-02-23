@@ -1,6 +1,3 @@
-from collections import deque
-
-
 class Sort(object):
     @classmethod
     def merge_sort(cls, array):
