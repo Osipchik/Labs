@@ -1,7 +1,17 @@
+import ast
+
+
 class Json(object):
     NULL = 'null'
+    UTF = 'utf-8'
+    UNICODE_ESCAPE = 'unicode_escape'
+    LIST_BRACKETS = '[]'
+    DICT_BRACKETS = '{}'
     __indent = None
     __offset = 0
+
+    __lists = []
+    __dicts = []
 
     @classmethod
     def dumps(cls, obj, indent=None):
@@ -13,6 +23,13 @@ class Json(object):
         result = None
 
         if isinstance(obj, str):
+            obj = obj.encode(cls.UNICODE_ESCAPE).decode(cls.UTF)
+            obj = obj.replace('\"', '\\"')
+            obj = obj.replace('\\x08', '\\b')
+            obj = obj.replace('\\x0c', '\\f')
+            obj = obj.replace('\\x12', '\\u0012')
+            obj = obj.replace('\\x0', '\\u000')
+
             result = f'"{obj}"'
         elif isinstance(obj, bool):
             result = str(obj).lower()
@@ -28,13 +45,13 @@ class Json(object):
 
     @classmethod
     def __collection_to_json(cls, collection):
-        brackets = '[]'
+        brackets = cls.LIST_BRACKETS
         result = ''
         cls.__offset += 1
         if isinstance(collection, list) or isinstance(collection, tuple):
             result = cls.__list_to_json(collection)
         elif isinstance(collection, dict):
-            brackets = '{}'
+            brackets = cls.DICT_BRACKETS
             result = cls.__dict_to_json(collection)
         cls.__offset -= 1
 
@@ -58,6 +75,34 @@ class Json(object):
     def __dict_to_json(cls, obj):
         result = ''
         for k, v in obj.items():
-            result += cls.__get_spaces() + f'"{k}": ' + cls.__get_str(v) + ','
+            if isinstance(k, tuple):
+                raise TypeError(f'keys must be str, int, float, bool or None, ')
 
+            key = f'{cls.__get_str(k)}: ' if isinstance(k, str) else f'"{cls.__get_str(k)}": '
+            result += cls.__get_spaces() + key + cls.__get_str(v) + ','
         return result
+
+    @classmethod
+    def loads(cls, string):
+        res = ast.literal_eval(string.replace('true', 'True').replace('false', 'False').replace('null', 'None'))
+
+        return res
+
+    @classmethod
+    def __json_tu_num(cls, string):
+        string = string.encode(cls.UTF).decode(cls.UNICODE_ESCAPE)
+        if '.' in string:
+            try:
+                res = float(string)
+            except ValueError:
+                res = string[1:-1]
+        else:
+            try:
+                res = int(string)
+            except ValueError:
+                res = string[1:-1]
+
+        if res is None:
+            res = string[1:-1]
+
+        return res
