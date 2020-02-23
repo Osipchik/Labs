@@ -4,6 +4,7 @@ import os
 
 
 class External_sort(object):
+    __RESULT_FILE = 'sorted_numbers.txt'
     __TEMP_LINES = 1_000_000
     __temp_files = []
 
@@ -29,7 +30,7 @@ class External_sort(object):
 
     def __create_file(self):
         temp_file = self.__temp_files[0]
-        with open('C:\\Users\\ASUS\\PycharmProjects\\sorted_numbers.txt', 'w') as f, open(temp_file.name, 'r') as temp:
+        with open(self.__RESULT_FILE, 'w') as f, open(temp_file.name, 'r') as temp:
             for i, val in enumerate(temp):
                 f.writelines(val)
         self.__remove_temp_file(temp_file)
