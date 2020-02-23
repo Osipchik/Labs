@@ -39,7 +39,7 @@ class Json:
         result = None
 
         if isinstance(obj, str):
-            result = f'"{cls.__disable_escape_sequences(obj)}"'
+            result = '"{}"'.format(cls.__disable_escape_sequences(obj))
         elif isinstance(obj, bool):
             result = str(obj).lower()
         elif isinstance(obj, int) or isinstance(obj, float):
@@ -48,8 +48,6 @@ class Json:
             result = cls.NULL
         elif isinstance(obj, list) or isinstance(obj, dict) or isinstance(obj, tuple):
             result = cls.__collection_to_json(obj)
-        elif isinstance(obj, dict):
-            result = cls.__dict_to_json(obj)
         return result
 
     @classmethod
@@ -95,9 +93,9 @@ class Json:
         result = ''
         for k, v in obj.items():
             if isinstance(k, tuple):
-                raise TypeError(f'keys must be str, int, float, bool or None, ')
+                raise TypeError('keys must be str, int, float, bool or None, ')
 
-            key = f'{cls.__get_str(k)}: ' if isinstance(k, str) else f'"{cls.__get_str(k)}": '
+            key = '{}: '.format(cls.__get_str(k)) if isinstance(k, str) else '"{}": '.format(cls.__get_str(k))
             result += cls.__get_spaces() + key + cls.__get_str(v) + ','
         return result
 

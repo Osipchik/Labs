@@ -5,9 +5,8 @@ class n_vector(object):
     vector = []
 
     def __init__(self, vector):
-        if vector:
+        if isinstance(vector, list):
             self.vector = vector
-        pass
 
     def __add__(self, other):
         return self.__operation(other, '+')
@@ -21,7 +20,7 @@ class n_vector(object):
     def __str__(self):
         string = ''
         for i in self.vector:
-            string += f' {i}'
+            string += ' {}'.format(i)
         return string[1:]
 
     def __check(self, other, operation):
@@ -44,7 +43,7 @@ class n_vector(object):
         return result
 
     def get_item(self, index):
-        if len(self.vector) > index >= 1:
+        if len(self.vector) > index >= 0:
             return self.vector[index]
 
     def len(self):
@@ -56,5 +55,6 @@ class n_vector(object):
 
     @staticmethod
     def is_equal(vec1, vec2):
-        asd = list(set(vec1.vector) ^ set(vec2.vector))
-        return asd == []
+        if not isinstance(vec1, n_vector) or not isinstance(vec2, n_vector):
+            raise TypeError('vectors must be n_vector')
+        return list(set(vec1.vector) ^ set(vec2.vector)) == []
