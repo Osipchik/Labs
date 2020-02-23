@@ -1,7 +1,22 @@
 import ast
 
 
-class Json(object):
+class cache:
+    prev_data = None
+    prev_result = None
+
+    def __init__(self, func):
+        self.function = func
+
+    def __call__(self, *args):
+        if args[1] != self.prev_data:
+            self.prev_data = args[1]
+            self.prev_result = self.function(*args)
+
+        return self.prev_result
+
+
+class Json:
     NULL = 'null'
     UTF = 'utf-8'
     UNICODE_ESCAPE = 'unicode_escape'
@@ -19,18 +34,12 @@ class Json(object):
         return cls.__get_str(obj)
 
     @classmethod
+    @cache
     def __get_str(cls, obj):
         result = None
 
         if isinstance(obj, str):
-            obj = obj.encode(cls.UNICODE_ESCAPE).decode(cls.UTF)
-            obj = obj.replace('\"', '\\"')
-            obj = obj.replace('\\x08', '\\b')
-            obj = obj.replace('\\x0c', '\\f')
-            obj = obj.replace('\\x12', '\\u0012')
-            obj = obj.replace('\\x0', '\\u000')
-
-            result = f'"{obj}"'
+            result = f'"{cls.__disable_escape_sequences(obj)}"'
         elif isinstance(obj, bool):
             result = str(obj).lower()
         elif isinstance(obj, int) or isinstance(obj, float):
@@ -42,6 +51,16 @@ class Json(object):
         elif isinstance(obj, dict):
             result = cls.__dict_to_json(obj)
         return result
+
+    @classmethod
+    def __disable_escape_sequences(cls, string):
+        string = string.encode(cls.UNICODE_ESCAPE).decode(cls.UTF)
+        string = string.replace('\"', '\\"')
+        string = string.replace('\\x08', '\\b')
+        string = string.replace('\\x0c', '\\f')
+        string = string.replace('\\x12', '\\u0012')
+        string = string.replace('\\x0', '\\u000')
+        return string
 
     @classmethod
     def __collection_to_json(cls, collection):
@@ -82,27 +101,6 @@ class Json(object):
             result += cls.__get_spaces() + key + cls.__get_str(v) + ','
         return result
 
-    @classmethod
-    def loads(cls, string):
-        res = ast.literal_eval(string.replace('true', 'True').replace('false', 'False').replace('null', 'None'))
-
-        return res
-
-    @classmethod
-    def __json_tu_num(cls, string):
-        string = string.encode(cls.UTF).decode(cls.UNICODE_ESCAPE)
-        if '.' in string:
-            try:
-                res = float(string)
-            except ValueError:
-                res = string[1:-1]
-        else:
-            try:
-                res = int(string)
-            except ValueError:
-                res = string[1:-1]
-
-        if res is None:
-            res = string[1:-1]
-
-        return res
+    @staticmethod
+    def loads(string):
+        return ast.literal_eval(string.replace('true', 'True').replace('false', 'False').replace('null', 'None'))
