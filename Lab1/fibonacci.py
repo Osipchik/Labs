@@ -1,4 +1,4 @@
-def fibonachi (count):
+def fibonacci(count):
     a, b = 1, 1
     while count > 0:
         yield a

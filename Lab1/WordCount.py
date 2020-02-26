@@ -1,18 +1,20 @@
 from collections import Counter
 import re
 
-class word_count(object):
-    def __init__(self):
-        self.text = Counter()
 
-    def print_word_count(self, message):
-        self.text = Counter([re.sub('[^\w-]', '', val) for i, val in enumerate(message)])
+class word_count:
+    text = Counter()
 
-        for k, v in self.text.items():
+    @classmethod
+    def print_word_count(cls, message):
+        cls.text = Counter([re.sub('[^\w-]', '', val) for i, val in enumerate(message)])
+
+        for k, v in cls.text.items():
             print(f'{k}: {v}')
 
-    def print_most_common(self):
+    @classmethod
+    def print_most_common(cls):
         most_common_str = ''
-        for k, v in self.text.most_common(10):
+        for k, v in cls.text.most_common(10):
             most_common_str += k + ' '
         print(most_common_str)

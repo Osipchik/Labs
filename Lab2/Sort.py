@@ -1,7 +1,7 @@
 class Sort(object):
     @classmethod
     def merge_sort(cls, array):
-        if len(array) <= 1:
+        if len(array) < 2:
             return array
 
         half = len(array) // 2

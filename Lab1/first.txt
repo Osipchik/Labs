@@ -1,1 +1,5 @@
-qqqq qqq. www! (ddd) d ddd d d d d tyty 5454 5 5 5 5 65 65 65 yt yt yt yt y t yt yt hhhhh hhhh hhhh hhhh hhhh
+In computer programming, programming languages are often colloquially classified as to whether the language's type system makes it strongly typed or weakly typed (loosely typed).
+Generally, a strongly typed language has stricter typing rules at compile time,
+ which implies that errors and exceptions are more likely to happen during compilation. 
+Dynamically typed languages (where type checking happens at run time) can also be strongly typed.
+ Most of these rules affect variable assignment, return values and function calling.
