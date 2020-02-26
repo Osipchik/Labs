@@ -1,83 +1,77 @@
-from Sort import Sort
 import tempfile
 import os
 
 
-class External_sort(object):
-    __RESULT_FILE = 'sorted_numbers.txt'
-    __TEMP_LINES = 1_000_000
-    __temp_files = []
+class external_sort:
+    __temp_file = None
 
-    def sort_file(self, filename):
-        self.__read_file(filename)
-        self.__sort_temp_files()
-        self.__create_file()
-
-    def __read_file(self, filename):
+    @classmethod
+    def sort_file(cls, src_filename, dist_filename, read_lines):
+        cls.__is_src_exist(src_filename)
         temp_arr = []
-        with open(filename, 'r') as f:
-            line = f.readline()
-            while line:
-                if len(temp_arr) > self.__TEMP_LINES:
-                    self.__create_temp_file(temp_arr)
+        with open(src_filename, 'r') as f:
+            for line in f:
+                temp_arr.append(int(line))
+                if len(temp_arr) >= read_lines:
+                    temp_arr.sort()
+                    if cls.__temp_file is not None:
+                        cls.__merge_sorted_temp(temp_arr)
+                    else:
+                        cls.__create_temp(temp_arr)
                     temp_arr = []
 
-                temp_arr.append(int(line))
-                line = f.readline()
-
-            if len(temp_arr) > 0:
-                self.__create_temp_file(temp_arr)
-
-    def __create_file(self):
-        temp_file = self.__temp_files[0]
-        with open(self.__RESULT_FILE, 'w') as f, open(temp_file.name, 'r') as temp:
-            for i, val in enumerate(temp):
-                f.writelines(val)
-        self.__remove_temp_file(temp_file)
-
-    def __create_temp_file(self, array):
-        with tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
-            array = Sort.merge_sort(array)
-            temp.writelines(f'{i}\n' for i in array)
-            self.__temp_files.append(temp)
-
-    def __sort_temp_files(self):
-        while len(self.__temp_files) > 1:
-            with open(self.__temp_files[0].name, 'r') as temp_f, open(self.__temp_files[1].name, 'r') as temp_s:
-                with tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
-                    self.__fill_temp(temp, [temp_f, temp_s])
-                    self.__temp_files.append(temp)
-
-            self.__remove_temp_file(temp_f)
-            self.__remove_temp_file(temp_s)
-
-    def __fill_temp(self, temp, files):
-        first_line = files[0].readline()
-        second_line = files[1].readline()
-        while first_line and second_line:
-            if int(first_line) > int(second_line):
-                temp.writelines(f'{second_line}')
-                second_line = files[1].readline()
-            else:
-                temp.writelines(f'{first_line}')
-                first_line = files[0].readline()
-
-        if first_line:
-            self.__continue_fill(temp, files[0], first_line)
-        else:
-            self.__continue_fill(temp, files[1], second_line)
+        cls.__create_result_file(dist_filename)
 
     @staticmethod
-    def __continue_fill(temp, file, line):
-        while line:
-            temp.writelines(f'{line}')
-            line = file.readline()
+    def __is_src_exist(src):
+        if not os.path.exists(src):
+            raise FileNotFoundError('no such file: {}'.format(src))
 
-    def __remove_temp_file(self, file):
-        if os.path.exists(file.name):
-            self.__temp_files.pop(0)
-            os.remove(file.name)
+    @classmethod
+    def __create_temp(cls, lines):
+        with tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
+            temp.writelines('{}\n'.format(i) for i in lines)
+            cls.__temp_file = temp.name
 
-    def __del__(self):
-        for i in self.__temp_files:
-            self.__remove_temp_file(i)
+    @classmethod
+    def __merge_sorted_temp(cls, array):
+        with tempfile.NamedTemporaryFile(delete=False, mode='w') as temp:
+            with open(cls.__temp_file, 'r') as f:
+                line = cls.__merge_file_with_array(f, temp, iter(array), array[-1])
+                while line:
+                    temp.writelines('{}'.format(line))
+                    line = f.readline()
+
+        cls.__remove_temp_file()
+        cls.__temp_file = temp.name
+
+    @staticmethod
+    def __merge_file_with_array(file, f_temp, iterator, last):
+        item = next(iterator)
+        f_line = file.readline()
+        while f_line:
+            if int(f_line) > item:
+                f_temp.writelines('{}\n'.format(item))
+                if item != last:
+                    item = next(iterator)
+                else:
+                    break
+            else:
+                f_temp.writelines('{}'.format(f_line))
+                f_line = file.readline()
+
+        return f_line
+
+    @classmethod
+    def __remove_temp_file(cls):
+        if os.path.exists(cls.__temp_file):
+            os.remove(cls.__temp_file)
+            cls.__temp_file = None
+
+    @classmethod
+    def __create_result_file(cls, dist_filename):
+        with open(dist_filename, 'w') as f, open(cls.__temp_file, 'r') as temp:
+            for line in temp:
+                f.writelines('{}'.format(line))
+
+        cls.__remove_temp_file()
