@@ -21,8 +21,15 @@ namespace ABC
             Console.WriteLine($"Second binary number: {new Binary(Math.Abs(numbers[1]))}");
             Console.WriteLine($"Complement code for 1st number: {new Binary(numbers[0])}");
             Console.WriteLine($"Complement code for 2st number: {new Binary(numbers[1])}");
-            Console.WriteLine($"Mul of two completion: {Calculate(numbers, Operations.Mul)}");
-            Console.WriteLine($"Mul of two decimals: {numbers[0] * numbers[1]}");
+            try
+            {
+                Console.WriteLine($"Mul of two completion: {Calculate(numbers, Operations.Mul)}");
+                Console.WriteLine($"Mul of two decimals: {numbers[0] * numbers[1]}");
+            }
+            catch (OverflowException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
         
         private static bool ReadArgs(IEnumerable<string> args, out decimal[] numbers)
@@ -35,7 +42,7 @@ namespace ABC
                     number.Add(num);
                 }
             }
-         
+            
             numbers = number.ToArray();
             return numbers.Length == 2;
         }
@@ -46,15 +53,9 @@ namespace ABC
             {
                 Operations.Sum => new Binary(numbers[0]) + new Binary(numbers[1]),
                 Operations.Sub => new Binary(numbers[0]) + new Binary(numbers[1] * -1),
-                Operations.Mul => Mul(numbers[0], numbers[1]),
+                Operations.Mul => new Binary(numbers[0]) * new Binary(numbers[1]),
                 _ => throw new ArgumentException($"unknown operation: {operation}")
             };
-        }
-
-        private static Binary Mul(decimal num1, decimal num2)
-        {
-            var res = new Binary(Math.Abs(num1)) * new Binary(Math.Abs(num2));
-            return num1 * num2 < 0 ? new Binary(res.ToComplementCode()) : res;
         }
     }
 }

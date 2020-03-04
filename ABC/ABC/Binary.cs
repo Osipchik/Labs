@@ -7,14 +7,14 @@ namespace ABC
 {
     public class Binary
     {
-        private enum NumberSystem
+        private enum BinarySystem
         {
             Base = 2,
-            AddedLength = 4,
+            ByteLen = 8,
             MaxSystemLength = 64
         }
 
-        private const int Base = (int) NumberSystem.Base;
+        private const int Base = (int) BinarySystem.Base;
 
         private IEnumerable<int> Value { get; }
 
@@ -42,16 +42,14 @@ namespace ABC
                 num = Math.Truncate(num);
             }
 
-            return NormalizeNumber(binary, 0);
+            return NormalizeNumber(binary);
         }
 
-        private static IEnumerable<int> NormalizeNumber(IList<int> binary, int value)
+        private static IEnumerable<int> NormalizeNumber(IList<int> binary)
         {
-            if (binary.Count >= (int) NumberSystem.MaxSystemLength) return binary;
-            var binaryCount = Math.Abs(binary.Count % (int) NumberSystem.AddedLength - (int) NumberSystem.AddedLength);
-            binaryCount += binaryCount == 0 && binary[0] != 0 ? (int) NumberSystem.AddedLength : 0;
-
-            return binary.ExpandFromBegin(binaryCount, value);
+            return binary.Count >= (int) BinarySystem.MaxSystemLength 
+                ? binary 
+                : binary.ExpandFromBegin(Math.Abs(binary.Count % (int) BinarySystem.ByteLen - (int) BinarySystem.ByteLen));
         }
         
         private Binary ToInvertCode()
@@ -63,7 +61,7 @@ namespace ABC
                 binary[count++] = i == 1 ? 0 : 1;
             }
             
-            return new Binary(NormalizeNumber(binary, 1));
+            return new Binary(binary);
         }
 
         public IEnumerable<int> ToComplementCode()
@@ -78,8 +76,9 @@ namespace ABC
         public static Binary operator +(Binary binary1, Binary binary2)
         {
             var (item1, item2) = NormalizeLists(binary1, binary2);
-            
-            return new Binary(CalculateSum(item1, item2));
+            var res = CalculateSum(item1, item2);
+
+            return new Binary(res);
         }
 
         private static List<int> CalculateSum(List<int> list1, List<int> list2)
@@ -91,6 +90,10 @@ namespace ABC
                 addToNext = add;
             }
 
+            if (list1.Count >= (int) BinarySystem.MaxSystemLength && addToNext != 0)
+            {
+                throw new OverflowException("Overflow");
+            }
             return list1;
         }
 
@@ -98,27 +101,27 @@ namespace ABC
         {
             var (item1, item2) = NormalizeLists(binary1, binary2);
             var res = new List<int>().ExpandFromBegin(item1.Count);
+            var shift = 0;
+            item2.Reverse();
             foreach (var i in item2)
             {
-                res = res.ExpandFromEnd(1);
-                item1 = item1.ExpandFromBegin(1);
                 if (i != 0)
                 {
-                    res = CalculateSum(res, item1);
+                    var shifted = item1.GetRange(shift, item1.Count - shift).ExpandFromEnd(shift);
+                    res = CalculateSum(res, shifted);
                 }
+                shift++;
             }
 
-            res = NormalizeNumber(res, 0).ToList();
-            var range = res.Count - binary1.Value.Count() - binary2.Value.Count();
-            res.RemoveRange(0, range > 0 ? range : 0);
-            return new Binary(res);
+            var range = res.IndexOf(1);
+            return new Binary(NormalizeNumber(res.GetRange(range, res.Count - range)).ToList());
         }
 
         private static List<int> NormalizeBinary(Binary binary, int lenSub)
         {
             var bin = binary.Value.ToList();
             
-            return bin.ExpandFromBegin(lenSub, bin[0] == 1 && bin[1] == 1 ? 1 : 0);
+            return bin.ExpandFromBegin(lenSub, bin[0] == 1 ? 1 : 0);
         }
 
         private static (List<int>, List<int>) NormalizeLists(Binary binary1, Binary binary2)
