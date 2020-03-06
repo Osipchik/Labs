@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ABC
 {
-    public class ConsoleMain
+    public static class ConsoleMain
     {
         private enum Operations
         {
@@ -23,10 +23,10 @@ namespace ABC
             Console.WriteLine($"Complement code for 2st number: {new Binary(numbers[1])}");
             try
             {
-                Console.WriteLine($"Mul of two completion: {Calculate(numbers, Operations.Mul)}");
-                Console.WriteLine($"Mul of two decimals: {numbers[0] * numbers[1]}");
+                Console.WriteLine($"Div of two completion: {Calculate(numbers, Operations.Div)}");
+                Console.WriteLine($"Div of two decimals: {numbers[0] / numbers[1]}");
             }
-            catch (OverflowException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -52,8 +52,9 @@ namespace ABC
             return operation switch
             {
                 Operations.Sum => new Binary(numbers[0]) + new Binary(numbers[1]),
-                Operations.Sub => new Binary(numbers[0]) + new Binary(numbers[1] * -1),
+                Operations.Sub => new Binary(numbers[0]) + new Binary(-numbers[1]),
                 Operations.Mul => new Binary(numbers[0]) * new Binary(numbers[1]),
+                Operations.Div => new Binary(numbers[0]) / new Binary(numbers[1]),
                 _ => throw new ArgumentException($"unknown operation: {operation}")
             };
         }
