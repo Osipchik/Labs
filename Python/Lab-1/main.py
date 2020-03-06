@@ -31,7 +31,8 @@ if message:
         print(Word_count.get_most_common())
 elif float_list:
     if args.q:
-        print(Sorts.quick_sort(float_list, 0, len(float_list) - 1))
+        Sorts.quick_sort(float_list)
+        print(float_list)
     elif args.s:
         print(Sorts.merge_sort(float_list))
     else:

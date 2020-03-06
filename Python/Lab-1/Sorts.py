@@ -3,18 +3,25 @@ import random
 
 class Sorts:
     @staticmethod
-    def quick_sort(array, begin=0, end=None):
-        if end is None:
-            end = len(array) - 1
+    def quick_sort(array, fst=0, lst=None):
+        if lst is None:
+            lst = len(array) - 1
 
-        def _quick_sort(arr, first, last):
-            if first >= last:
-                return
-            pivot = arr[random.randint(first, last)]
-            _quick_sort(arr, first, pivot - 1)
-            _quick_sort(arr, pivot + 1, last)
+        if fst >= lst:
+            return
+        i, j = fst, lst
+        pivot = array[random.randint(fst, lst)]
 
-        return _quick_sort(array, begin, end)
+        while i <= j:
+            while array[i] < pivot:
+                i += 1
+            while array[j] > pivot:
+                j -= 1
+            if i <= j:
+                array[i], array[j] = array[j], array[i]
+                i, j = i + 1, j - 1
+        Sorts.quick_sort(array, fst, j)
+        Sorts.quick_sort(array, i, lst)
 
     @staticmethod
     def merge_sort(array):
