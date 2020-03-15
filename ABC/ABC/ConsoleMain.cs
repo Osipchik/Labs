@@ -17,31 +17,31 @@ namespace ABC
                 Console.WriteLine($"Incorrect input: {string.Join(", ", numbers)} it must be 2 floats");   
                 return;
             }
-            
-            Console.WriteLine($"First binary number: {new FloatBinary(numbers[0])}");
-            Console.WriteLine($"Second binary number: {new FloatBinary(numbers[1])}");
+                
+            Console.WriteLine($"1st binary number: {new FloatBinary(numbers[0])}");
+            Console.WriteLine($"2nd binary number: {new FloatBinary(numbers[1])}");
             try
             {
                 var asd = Calculate(numbers, Operations.Sum);
                 Console.WriteLine($"Sum of two floats: {asd}");
                 Console.WriteLine($"Sum of two float converted to dec: {asd.ToDouble}");
-                Console.WriteLine($"Sum of two floats in dec: {numbers[0] + numbers[1]}");
+                Console.WriteLine($"Sum of two dec (using c#): {numbers[0] + numbers[1]}");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-        
+            
         private static bool ReadArgs(IEnumerable<string> args, out double[] numbers)
         {
             var number = new List<double>();
             foreach (var s in args) if (double.TryParse(s, out var num)) number.Add(num);
             numbers = number.ToArray();
-            
+                
             return numbers.Length == 2;
         }
-        
+            
         private static FloatBinary Calculate(IReadOnlyList<double> numbers, Operations operation)
         {
             return operation switch

@@ -111,17 +111,15 @@ namespace ABC
             var exp = fb1._exponent;
             var (m1, m2) = Prepare(fb1, fb2, expDif);
 
+            var firstBigger = Math.Abs(fb1.ToDouble) > Math.Abs(fb2.ToDouble);
             if (!fb1._isNegative && fb2._isNegative || fb1._isNegative && !fb2._isNegative)
-            {
-                var firstBigger = Math.Abs(fb1.ToDouble) > Math.Abs(fb2.ToDouble);
-                fb1._isNegative = firstBigger ? fb1._isNegative : fb2._isNegative;
                 GetComplementCode(ref firstBigger ? ref m1 : ref m2);
-            }
             
             var res = (new Binary(m1) + new Binary(m2)).Value.ToList();
 
             if(!fb1._isNegative && !fb2._isNegative || fb1._isNegative && fb2._isNegative) NormalizePositive(ref exp, ref res);
             else NormalizeNegative(ref exp, ref res);
+            fb1._isNegative = firstBigger ? fb1._isNegative : fb2._isNegative;
             
             return new FloatBinary(fb1._isNegative, exp, res);
         }
@@ -145,6 +143,7 @@ namespace ABC
 
         private static void NormalizeNegative(ref IEnumerable<int> exp, ref List<int> sub)
         {
+            Console.WriteLine($"sub: {new Binary(sub)}");
             if (sub[0] == 0 && sub[1] == 1)
             {
                 sub.RemoveAt(0);
@@ -164,6 +163,9 @@ namespace ABC
                 sub.RemoveRange(0, index + 1);
                 sub.AddRange(new int[(int) BinaryConstants.Mantissa - sub.Count]);
             }
+            
+            //0100 0001 1100  1001 1100 0001 0100 1101 1100 1101 1001 0001 0110 0001 1111 1010
+
         }
         
         private static void NormalizeNums(ref FloatBinary fb1, ref FloatBinary fb2, out double expDiff)
@@ -214,8 +216,9 @@ namespace ABC
         {
             var exp = exponent.ToList();
             exp = (new Binary(exp) + new Binary(-count)).Value.ToList();
-
-            return exp;
+            if (exp.TakeWhile(i => i == 0).Count() == exp.Count) throw new OverflowException("exponent underflow");
+            
+            return (new Binary(exp) + new Binary(-count)).Value.ToList();;
         }
         
 
@@ -229,11 +232,7 @@ namespace ABC
 
         private double GetExponent => (new Binary(_exponent) + new Binary(-(int) BinaryConstants.Exp)).ToDouble();
         
-        private bool CheckZero()
-        {
- 
-            return _exponent.Compare(ZeroExp) && _mantissa.Compare(ZeroMantissa);
-        }
+        private bool CheckZero() => _exponent.Compare(ZeroExp) && _mantissa.Compare(ZeroMantissa);
         
         public double ToDouble => CheckZero() ? 0 : ConvertToDouble();
 
