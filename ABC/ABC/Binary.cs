@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
 namespace ABC
@@ -14,23 +15,20 @@ namespace ABC
             MaxLength = 64
         }
         
-        private IEnumerable<int> Value { get; }
+        public IEnumerable<int> Value { get; }
 
-        public Binary(decimal num) 
+        public Binary(double num) 
         {
             Value = num < 0 ? ToDirectCode(-num) : ToDirectCode(num);
-            if (num < 0)
-            {
-                Value = ToComplementCode();
-            }
+            if (num < 0) Value = ToComplementCode();
         }
 
-        private Binary(IEnumerable<int> binary)
+        public Binary(IEnumerable<int> binary)
         {
             Value = binary;
         }
         
-        private static IEnumerable<int> ToDirectCode(decimal num)
+        private static IEnumerable<int> ToDirectCode(double num)
         {
             var binary = new List<int>();
             while (num > 0)
@@ -46,32 +44,30 @@ namespace ABC
         private static IEnumerable<int> NormalizeNumber(IEnumerable<int> binary)
         {
             var number = binary.ToList();
+
             return number.Count >= (int) BinarySystem.MaxLength 
                 ? number 
                 : number.ExpandBegin(Math.Abs(number.Count % (int) BinarySystem.MinLen - (int) BinarySystem.MinLen));
         }
         
-        private Binary ToInvertCode()
+        public Binary ToInvertCode()
         {
             var binary = new int[Value.Count()];
             var count = 0;
-            foreach (var i in Value)
-            {
-                binary[count++] = i == 1 ? 0 : 1;
-            }
+            foreach (var i in Value) binary[count++] = i == 1 ? 0 : 1;
             
             return new Binary(binary);
         }
 
-        private IEnumerable<int> ToComplementCode()
+        public IEnumerable<int> ToComplementCode()
         {
             var code = this;
             if (Value.First() != 1)
             {
                 code = ToInvertCode() + new Binary(1);
-                code.Value.ToArray()[0] = 1;
+                code.Value.ToList()[0] = 1;
             }
-            
+        
             return code.Value;
         }
 
@@ -80,46 +76,61 @@ namespace ABC
         public static Binary operator +(Binary binary1, Binary binary2)
         {
             var (item1, item2) = NormalizeLists(binary1, binary2);
-            var res = CalculateSum(item1, item2);
+            var res = CalculateSum(item1, item2, out _).ToList();
 
+            return new Binary(res);
+        }
+
+        public static Binary Add(Binary binary1, Binary binary2)
+        {
+            var (item1, item2) = NormalizeLists(binary1, binary2);
+            var res = CalculateSum(item1, item2, out var addToNext).ToList();
+            if (addToNext != 0)
+            {
+                
+            }
+            
             return new Binary(res);
         }
         
         public static Binary operator *(Binary binary1, Binary binary2)
         {
-            var (item1, item2) = NormalizeLists(binary1, binary2);
-            var res = new List<int>().ExpandBegin(item1.Count);
+            var (item1, item2) = NormalizeLists(binary1.ComplementToDirect, binary2.ComplementToDirect);
+            var res = new Binary(new List<int>().ExpandBegin(item1.Count));
             var shift = 0;
             item2.Reverse();
+            
             foreach (var i in item2)
             {
                 if (i != 0)
                 {
-                    var shifted = item1.GetRange(shift, item1.Count - shift).ExpandEnd(shift);
-                    res = CalculateSum(res, shifted);
+                    var shifted = item1.ExpandEnd(shift);
+                    res += new Binary(shifted);
                 }
                 shift++;
             }
 
-            var range = res.IndexOf(1);
-            return new Binary(NormalizeNumber(res.GetRange(range, res.Count - range)).ToList());
+            return NormalizeMul(binary1, binary2, new Binary(NormalizeNumber(res.Value)));
+        }
+
+        private static Binary NormalizeMul(Binary binary1, Binary binary2, Binary result)
+        {
+            if (binary1.Value.First() == binary2.Value.First()) result = result.ComplementToDirect;
+            else if (binary1.Value.First() != binary2.Value.First() && result.Value.First() != 1)
+                result = new Binary(result.ToComplementCode());
+
+            return result;
         }
 
         public static Binary operator /(Binary binary1, Binary binary2)
         {
-            if (!SqueezeBin(binary2.Value).Any())
-            {
-                throw new DivideByZeroException("Attempted to divide by zero.");
-            }
+            if (!SqueezeBin(binary2.Value).Any()) throw new DivideByZeroException("Attempted to divide by zero.");
             
             var sign = binary1.Value.First() == binary2.Value.First();
-            var binNum = binary1.ComplementToDirect.Value.ToArray();
-
             var divider = binary2.Value.First() != 1 ? new Binary(binary2.ToComplementCode()) : binary2;
-
-            var res = GetIntPath(binNum, divider, out _);
-
+            var res = GetIntPath(binary1.ComplementToDirect.Value, divider, out _);
             var asd = sign ? NormalizeNumber(SqueezeBin(res)) : new Binary(res).ToComplementCode();
+            
             return new Binary(asd);
         }
 
@@ -136,10 +147,7 @@ namespace ABC
                     dividend = remains.Value.ToList();
                     res.Add(1);
                 }
-                else
-                {
-                    res.Add(0);
-                }
+                else res.Add(0);
             }
 
             return res;
@@ -150,7 +158,7 @@ namespace ABC
             var list = bin.ToList();
             var index = list.IndexOf(1);
             list.RemoveRange(0, index > 0 ? index : list.Count);
-
+        
             return list;
         }
         
@@ -171,19 +179,15 @@ namespace ABC
             return (bin1, bin2);
         }
 
-        private static List<int> CalculateSum(List<int> list1, List<int> list2)
+        private static IEnumerable<int> CalculateSum(IList<int> list1, IList<int> list2, out int addToNext)
         {
-            var addToNext = 0;
+            addToNext = 0;
             for (var i = list1.Count - 1; i >= 0; i--)
             {
                 list1[i] = Add(list1[i] += list2[i] + addToNext, out var add);
                 addToNext = add;
             }
-
-            if (list1.Count >= (int) BinarySystem.MaxLength && addToNext != 0)
-            {
-                throw new OverflowException("Overflow");
-            }
+            if (list1.Count >= (int) BinarySystem.MaxLength && addToNext != 0) throw new OverflowException("Overflow");
             
             return list1;
         }
@@ -200,37 +204,25 @@ namespace ABC
             return binItem;
         }
 
+        public double ToDouble()
+        {
+            var res = 0d;
+            var bin = (new Binary(Value)).ComplementToDirect.Value;
+            var enumerable = bin as int[] ?? bin.ToArray();
+         
+            var pow = enumerable.Length - 1;
+            foreach (var i in enumerable)
+            {
+                res += i * Math.Pow(2, pow);
+                pow--;
+            }
+
+            return Value.First() == 1 ? -res : res;
+        }
+        
         public override string ToString()
         {
             return Regex.Replace(string.Join("", Value), ".{4}", "$0 ");
-        }
-    }
-    
-    public static class Extensions
-    {
-        public static List<int> ExpandBegin(this IEnumerable<int> list, int discharge, int value = 0)
-        {
-            var expandedList = GenerateList(discharge, value).ToList();
-            expandedList.AddRange(list);
-            return expandedList;
-        }
-        
-        public static List<int> ExpandEnd(this IEnumerable<int> list, int discharge, int value = 0)
-        {
-            var expandedList = new List<int>(list);
-            expandedList.AddRange(GenerateList(discharge, value));
-            return expandedList;
-        }
-
-        private static IEnumerable<int> GenerateList(int size, int value)
-        {
-            var arr = new int[size];
-            for (var i = 0; i < arr.Length; i++)
-            {
-                arr[i] = value;
-            }
-
-            return arr;
         }
     }
 }
