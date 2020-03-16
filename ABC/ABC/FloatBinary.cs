@@ -110,18 +110,20 @@ namespace ABC
         {
             var exp = fb1._exponent;
             var (m1, m2) = Prepare(fb1, fb2, expDif);
-
-            var firstBigger = Math.Abs(fb1.ToDouble) > Math.Abs(fb2.ToDouble);
+            var sign = fb1._isNegative;
             if (!fb1._isNegative && fb2._isNegative || fb1._isNegative && !fb2._isNegative)
+            {
+                var firstBigger = Math.Abs(fb1.ToDouble) > Math.Abs(fb2.ToDouble);
+                sign = firstBigger ? fb1._isNegative : fb2._isNegative;
                 GetComplementCode(ref firstBigger ? ref m1 : ref m2);
+            }
             
             var res = (new Binary(m1) + new Binary(m2)).Value.ToList();
 
             if(!fb1._isNegative && !fb2._isNegative || fb1._isNegative && fb2._isNegative) NormalizePositive(ref exp, ref res);
             else NormalizeNegative(ref exp, ref res);
-            fb1._isNegative = firstBigger ? fb1._isNegative : fb2._isNegative;
             
-            return new FloatBinary(fb1._isNegative, exp, res);
+            return new FloatBinary(sign, exp, res);
         }
 
         private static void GetComplementCode(ref List<int> m)
@@ -216,9 +218,8 @@ namespace ABC
         {
             var exp = exponent.ToList();
             exp = (new Binary(exp) + new Binary(-count)).Value.ToList();
-            if (exp.TakeWhile(i => i == 0).Count() == exp.Count) throw new OverflowException("exponent underflow");
-            
-            return (new Binary(exp) + new Binary(-count)).Value.ToList();;
+
+            return exp;
         }
         
 
@@ -232,7 +233,11 @@ namespace ABC
 
         private double GetExponent => (new Binary(_exponent) + new Binary(-(int) BinaryConstants.Exp)).ToDouble();
         
-        private bool CheckZero() => _exponent.Compare(ZeroExp) && _mantissa.Compare(ZeroMantissa);
+        private bool CheckZero()
+        {
+ 
+            return _exponent.Compare(ZeroExp) && _mantissa.Compare(ZeroMantissa);
+        }
         
         public double ToDouble => CheckZero() ? 0 : ConvertToDouble();
 
