@@ -27,12 +27,14 @@ def check_test_file(test_list):
 class external_sort_test(unittest.TestCase):
     def test_sort(self):
         test_iterator = create_test_file()
-        external_sort.sort_file('test.txt', 'test_res.txt', 1000)
+        sort = external_sort()
+        sort.sort_file('test.txt', 'test_res.txt', 1000)
         self.assertTrue(check_test_file(test_iterator))
 
     def test_wrong_file(self):
+        sort = external_sort()
         with self.assertRaises(FileNotFoundError):
-            external_sort.sort_file('tes.txt', 'test_res.txt', 1000)
+            sort.sort_file('tes.txt', 'test_res.txt', 1000)
 
 
 if __name__ == '__main__':

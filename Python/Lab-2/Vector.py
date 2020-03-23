@@ -56,5 +56,5 @@ class n_vector(object):
     @staticmethod
     def is_equal(vec1, vec2):
         if not isinstance(vec1, n_vector) or not isinstance(vec2, n_vector):
-            raise TypeError('vectors must be n_vector')
+            raise TypeError('vectors must be n_vector type')
         return list(set(vec1.vector) ^ set(vec2.vector)) == []

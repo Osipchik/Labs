@@ -1,17 +1,20 @@
-class Sort(object):
-    @classmethod
-    def merge_sort(cls, array):
+from Singleton import Singleton
+
+
+class Sort(metaclass=Singleton):
+
+    def merge_sort(self, array):
         if len(array) < 2:
             return array
 
         half = len(array) // 2
-        left = cls.merge_sort(array[:half])
-        right = cls.merge_sort(array[half:])
+        left = self.merge_sort(array[:half])
+        right = self.merge_sort(array[half:])
 
-        return cls.merge(left, right)
+        return self.__merge(left, right)
 
-    @classmethod
-    def merge(cls, left, right):
+    @staticmethod
+    def __merge(left, right):
         left_index, right_index = 0, 0
         result = []
         while left_index < len(left) and right_index < len(right):
