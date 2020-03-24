@@ -1,7 +1,7 @@
 import math
 
 
-class n_vector(object):
+class NVector(object):
     vector = []
 
     def __init__(self, vector):
@@ -25,9 +25,9 @@ class n_vector(object):
 
     def __check(self, other, operation):
         if operation == '*':
-            return isinstance(other, int) or isinstance(other, float) or isinstance(other, n_vector)
+            return isinstance(other, int) or isinstance(other, float) or isinstance(other, NVector)
         else:
-            return isinstance(other, n_vector) and len(other.vector) == len(self.vector)
+            return isinstance(other, NVector) and len(other.vector) == len(self.vector)
 
     def __operation(self, other, operation):
         result = []
@@ -55,6 +55,6 @@ class n_vector(object):
 
     @staticmethod
     def is_equal(vec1, vec2):
-        if not isinstance(vec1, n_vector) or not isinstance(vec2, n_vector):
+        if not isinstance(vec1, NVector) or not isinstance(vec2, NVector):
             raise TypeError('vectors must be n_vector type')
         return list(set(vec1.vector) ^ set(vec2.vector)) == []
