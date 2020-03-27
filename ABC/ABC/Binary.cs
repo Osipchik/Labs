@@ -81,18 +81,6 @@ namespace ABC
             return new Binary(res);
         }
 
-        public static Binary Add(Binary binary1, Binary binary2)
-        {
-            var (item1, item2) = NormalizeLists(binary1, binary2);
-            var res = CalculateSum(item1, item2, out var addToNext).ToList();
-            if (addToNext != 0)
-            {
-                
-            }
-            
-            return new Binary(res);
-        }
-        
         public static Binary operator *(Binary binary1, Binary binary2)
         {
             var (item1, item2) = NormalizeLists(binary1.ComplementToDirect, binary2.ComplementToDirect);
@@ -126,31 +114,46 @@ namespace ABC
         {
             if (!SqueezeBin(binary2.Value).Any()) throw new DivideByZeroException("Attempted to divide by zero.");
             
-            var sign = binary1.Value.First() == binary2.Value.First();
             var divider = binary2.Value.First() != 1 ? new Binary(binary2.ToComplementCode()) : binary2;
             var res = GetIntPath(binary1.ComplementToDirect.Value, divider, out _);
-            var asd = sign ? NormalizeNumber(SqueezeBin(res)) : new Binary(res).ToComplementCode();
-            
-            return new Binary(asd);
+
+            return new Binary(res);
         }
 
         private static IEnumerable<int> GetIntPath(IEnumerable<int> dividendNum, Binary divider, out List<int> dividend)
         {
             var res = new List<int>();
-            dividend = new List<int>();
-            foreach (var i in dividendNum)
+            var num = dividendNum.ToList();
+            dividend = new List<int>(num.GetRange(0, divider.Value.Count() - 1));
+            
+            var count = dividend.Count;
+            while (CompareExp(res, 54))
             {
-                dividend.Add(i);
-                var remains = new Binary(NormalizeNumber(dividend)) + divider;
-                if (remains.Value.First() != 1)
+                dividend.Add(count < num.Count ? num[count] : 0);
+                var remains = (new Binary(NormalizeNumber(dividend)) + divider).Value.ToList();
+                if (remains.First() != 1)
                 {
-                    dividend = remains.Value.ToList();
+                    dividend = remains;
                     res.Add(1);
                 }
                 else res.Add(0);
+                count++;
             }
 
             return res;
+        }
+
+        private static bool CompareExp(List<int> bin, int exp)
+        {
+            var index = bin.IndexOf(1);
+            
+            if (index >= 0)
+            {
+                var len = bin.GetRange(index, bin.Count - index).Count();
+                return len < exp;
+            }
+            
+            return true;
         }
 
         private static IEnumerable<int> SqueezeBin(IEnumerable<int> bin)
@@ -187,7 +190,6 @@ namespace ABC
                 list1[i] = Add(list1[i] += list2[i] + addToNext, out var add);
                 addToNext = add;
             }
-            if (list1.Count >= (int) BinarySystem.MaxLength && addToNext != 0) throw new OverflowException("Overflow");
             
             return list1;
         }
@@ -204,22 +206,6 @@ namespace ABC
             return binItem;
         }
 
-        public double ToDouble()
-        {
-            var res = 0d;
-            var bin = (new Binary(Value)).ComplementToDirect.Value;
-            var enumerable = bin as int[] ?? bin.ToArray();
-         
-            var pow = enumerable.Length - 1;
-            foreach (var i in enumerable)
-            {
-                res += i * Math.Pow(2, pow);
-                pow--;
-            }
-
-            return Value.First() == 1 ? -res : res;
-        }
-        
         public override string ToString()
         {
             return Regex.Replace(string.Join("", Value), ".{4}", "$0 ");
