@@ -13,8 +13,7 @@ class MergeSort(metaclass=Singleton):
 
         return self.__merge(left, right)
 
-    @staticmethod
-    def __merge(left, right):
+    def __merge(self, left, right):
         left_index, right_index = 0, 0
         result = []
         while left_index < len(left) and right_index < len(right):

@@ -23,8 +23,7 @@ class ExternalSort(metaclass=Singleton):
 
         self.__create_result_file(dist_filename)
 
-    @staticmethod
-    def __is_src_exist(src):
+    def __is_src_exist(self, src):
         if not os.path.exists(src):
             raise FileNotFoundError('no such file: {}'.format(src))
 

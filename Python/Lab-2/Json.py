@@ -6,14 +6,13 @@ from Singleton import Singleton
 class cache:
     def __init__(self, method):
         self.function = method
-        self.prev_data = None
+        self.prev_data = {}
 
     def __call__(self, *args):
-        if args[1] != self.prev_data:
-            self.prev_data = args[1]
-            self.prev_result = self.function(*args)
+        if str(args[1]) not in self.prev_data:
+            self.prev_data[str(args[1])] = self.function(*args)
 
-        return self.prev_result
+        return self.prev_data[str(args[1])]
 
 
 def method_friendly_decorator(method_to_decorate):
@@ -50,8 +49,7 @@ class Json(metaclass=Singleton):
 
         return result
 
-    @staticmethod
-    def __disable_escape_sequences(string):
+    def __disable_escape_sequences(self, string):
         string = string.encode('unicode_escape').decode('utf-8')
         string = string.replace('\"', '\\"')
         string = string.replace('\\x08', '\\b')
