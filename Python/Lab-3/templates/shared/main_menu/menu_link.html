@@ -1,0 +1,12 @@
+{% block content  %}
+    <a href="{{ url }}/{{ user_id }}" class="transition menu-link"
+       data-ajaxlink="{{ url }}/{{ user_id }}"
+       onclick="link_clickHandler(event)">
+        <div class="menu-button">
+            <div class="row px-05">
+                <i class="{{ icon }} font-ico ico"></i>
+                <p class="font-weight-bold menu-btn-text {{ args }}">{{ text }}</p>
+            </div>
+        </div>
+    </a>
+{% endblock %}

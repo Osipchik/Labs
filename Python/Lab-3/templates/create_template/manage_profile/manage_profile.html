@@ -1,0 +1,53 @@
+{% block content  %}
+<div class="modal fade" id="manage-profile-modal" role="dialog" aria-hidden="true">
+
+{#    <div class="alert-wrapper">#}
+{#        <div id="warning-alert" class="alert alert-danger" role="alert">#}
+{#            Размер изображения не должен привышать 5 МБ#}
+{#        </div>#}
+{#    </div>#}
+
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Персонализация</h5>
+                <button type="button" class="close hover-red my-auto mr-1 transition" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body mx-3" id="image-uploads">
+                <div class="row">
+                    <div id="profile-image">
+                        {% include 'shared/user_image.html' with user=user size=134 disable_link=True %}
+                    </div>
+                    {% include 'create_template/manage_profile/image_uploader.html' with image_type='image'%}
+                </div>
+                <hr>
+                <div class="">
+                    <div id="profile-header">
+                        {% include 'shared/user_head_image.html' with image=user.user_profile.header_image %}
+                    </div>
+                    {% include 'create_template/manage_profile/image_uploader.html' with image_type='header-image' %}
+                </div>
+                <hr>
+                <div>
+                    {% include 'create_template/manage_profile/description.html' with form=description %}
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="transition outline-btn hover-red" data-dismiss="modal">
+                    <strong>Отмена</strong>
+                </button>
+                <button type="button"
+                        class="transition outline-btn hover-blue"
+                        onclick="SubmitChanges(event)"
+                >
+                    <strong>Сохранить</strong>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

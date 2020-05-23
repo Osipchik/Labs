@@ -1,0 +1,21 @@
+{% load static %}
+{% block content  %}
+    <a
+        {% if disable_link %}
+            href="#"
+        {% else %}
+            href="{% url 'accounts:profile' id=user.id %}"
+        {% endif %}
+        data-userid="{{ user.id }}"
+    >
+        {% if user.user_profile.image == '' %}
+            <div class="loading">
+                <img data-src='/media/userpick.webp' class="rounded-circle user-icon transition icon-{{ size }}"/>
+            </div>
+        {% else %}
+            <div class="loading">
+                <img data-src='{{ user.user_profile.image.url }}' class="rounded-circle user-icon transition bg-white icon-{{ size }}"/>
+            </div>
+        {% endif %}
+    </a>
+{% endblock %}

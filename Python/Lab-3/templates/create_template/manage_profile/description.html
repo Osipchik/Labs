@@ -1,0 +1,20 @@
+{% load static %}
+{% block content  %}
+    <link rel="stylesheet" href="{% static 'css/textarea.css' %}" type='text/css'>
+
+    <div class="flex-grow-1 upload-container " >
+        <form id="update-description"
+              method="POST"
+              class="upload-container"
+{#              action="{% url 'accounts:update_image' image_type %}"#}
+{#              data-url="{% url 'accounts:update_image' image_type %}"#}
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="change-description">
+                {{ form }}
+            </div>
+        </form>
+    </div>
+
+    <script src="{% static 'js/textarea.js' %}"></script>
+{% endblock %}

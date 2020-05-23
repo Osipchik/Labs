@@ -1,0 +1,45 @@
+textarea{
+    width: 100%;
+    min-height: 16px;
+    max-height: 300px;
+    border: none!important;
+    box-shadow: none!important;
+    overflow: auto!important;
+    flex: 1;
+    font-size: 20px!important;
+    padding: 0!important;
+}
+
+textarea:focus{
+    outline: none;
+}
+
+textarea::-moz-focus-inner{
+    border: 0;
+}
+
+::placeholder {
+  color: #BDBDBD!important;
+}
+
+:-ms-input-placeholder {
+  color: #BDBDBD!important;
+}
+
+::-ms-input-placeholder {
+  color: #BDBDBD!important;
+}
+
+.hr-textarea {
+    border: 0!important;
+    border-top: 10px solid rgba(0,0,0,.1) !important;
+}
+
+.parent{
+    display: flex;
+}
+
+.btn-twit {
+    color: white;
+    padding: 0.3rem 0.7rem!important;
+}

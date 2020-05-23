@@ -1,0 +1,42 @@
+{% block content  %}
+    <header id="header" role="banner" class="pt-2 default border-right d-flex flex-column">
+        <div class="float-right h-100 menu px-20">
+            <div class="w-100">
+                <a href="{% url 'home' %}"
+                   class="transition icon font-ico-big deep-blue hover-blue"
+                   data-ajaxlink="{% url 'home' %}"
+                   onclick="link_clickHandler(event)">
+                    <i class="fab fa-twitter pb-4"></i>
+                </a>
+                {% include 'shared/main_menu/menu_link.html' with url='' icon='fas fa-home' text='Главная' %}
+                {% include 'shared/main_menu/menu_link.html' with url='search' icon='fas fa-hashtag' text='Поиск' args='pl-1' %}
+                {% include 'shared/main_menu/menu_link.html' with url='bookmarks' icon='far fa-bookmark' text='Закладки' args='pl-2' %}
+
+                {% if user.is_authenticated %}
+                    {% include 'shared/main_menu/menu_link.html' with url='accounts/profile' user_id=user.id icon='far fa-user' text='Профиль' args='pl-1'%}
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+                <div class="user mt-auto transition flex-grow-1">
+                    <div class="row px-1 sm-center">
+                        {% include 'shared/user_image.html' with user=user size=39 disable_link=True%}
+
+                        <div class="dropup user-dropup d-none d-md-block">
+                            <div type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="d-flex flex-column">
+                                <p class="user-p"><strong>{{ user.first_name }}</strong></p>
+                                <small class="text-muted t-s">@{{ user }}</small>
+                            </div>
+                            <div class="dropdown-menu">
+                                <form class="" action="{% url 'accounts:logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" class="dropdown-item hover-blue" value="Выйти"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </header>
+{% endblock %}

@@ -1,0 +1,4 @@
+{% extends 'shared/_LayoutView.html' %}
+{% block content %}
+    {% include 'pages/profile/profile.html' with profile=profile twits_count=twits_count twits=twits%}
+{% endblock %}

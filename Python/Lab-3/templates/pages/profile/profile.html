@@ -1,0 +1,59 @@
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" type='text/css'>
+
+<div id="main">
+    {% include 'shared/header.html' with title=profile.first_name subtitle=profile.twits.count %}
+
+    <div class="profile-header-m">
+        <div class="profile-image-header">
+            {% include 'shared/user_head_image.html' with image=profile.user_profile.header_image %}
+            <div class="profile-header profile-header-icon rounded-circle">
+                {% include 'shared/user_image.html' with user=profile size=134 disable_link=True %}
+            </div>
+        </div>
+        {% if user.id == profile.id %}
+            <div class="d-flex justify-content-end">
+                <button class="transition outline-btn profile-btn hover-blue"
+                        type="button"
+                        data-toggle="modal"
+                        data-target="#manage-profile-modal">
+                    Настроить профиль
+                </button>
+                {% include 'create_template/manage_profile/manage_profile.html' with description=description %}
+            </div>
+        {% else %}
+            {% include 'create_template/follow_btn.html' with author=profile %}
+            <script src="{% static 'js/follow.js' %}"></script>
+        {% endif %}
+
+    </div>
+
+    <div class="p-3 user-info">
+        <p class="h5"><strong>{{ profile.first_name }}</strong></p>
+        <p class="text-muted">@{{ profile.username }}</p>
+        <p class="text-muted">Регистрация:&nbsp;<span class="text-lowercase">{{ profile.date_joined|date:"F Y" }}</span></p>
+        <p id="description">{{ profile.user_profile.description }}</p>
+        <div class="row px-3 text-dark">
+            <a href="{% url 'accounts:following' profile.id %}" class="text-dark"
+               data-ajaxlink="{% url 'accounts:following' profile.id %}"
+               onclick="link_clickHandler(event)">
+                <p><span class="font-weight-bold">{{ profile.following.count }}&nbsp;</span><span class="text-muted">читаемых</span></p>
+            </a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="{% url 'accounts:followers' profile.id %}" class="text-dark"
+               data-ajaxlink="{% url 'accounts:followers' profile.id %}"
+               onclick="link_clickHandler(event)">
+                <p><span class="font-weight-bold">{{ profile.followers.count }}&nbsp;</span><span class="text-muted">читателей</span></p>
+            </a>
+        </div>
+    </div>
+
+    {% include 'pages/profile/profile_tabs.html' with twits=twits profile=profile %}
+
+</div>
+{% if user.id == profile.id %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endif %}
+<script src="{% static 'js/profileTabs.js' %}"></script>
+{% endblock %}

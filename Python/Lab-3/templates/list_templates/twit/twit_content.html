@@ -1,0 +1,12 @@
+{% block content %}
+    {% if twit.is_deleted %}
+        <p class="text-muted"><em>Твит удален</em></p>
+    {% else %}
+        {{ twit.content }}
+        {% if twit.image %}
+            <div class="border mx-auto container-twit-image loading">
+                <img id="tweet-image" data-src="{{ twit.image.url }}" class="twit-image">
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

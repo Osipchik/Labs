@@ -1,0 +1,37 @@
+{% block content  %}
+    <div class="transition twit-block pt-3" id="twit-id-{{ twit.id }}" data-twitId="{{ twit.id }}">
+        <div class="mx-3 row d-flex">
+
+            {% include 'shared/user_image.html' with user=twit.user size=49 %}
+
+            <div class="px-1 flex-grow-1"
+                 data-action="twit" data-id="{{ twit.id }}">
+                <div class="row d-flex">
+
+                    <div data-ajaxlink="{% url 'twit_detail' twit_id=twit.id %}"
+                         class="flex-grow-1 pl-3"
+                         {% if not twit.is_deleted %}
+                               onclick="link_clickHandler(event)"
+                         {% endif %}
+                    >
+                        {% include 'shared/title_link.html' with author=twit.user mark_name=twit.mark_name load_link=twit.load_link creation_date=twit.get_time_diff %}
+
+                        <div class="px-3 my-3">
+                            {% include 'list_templates/twit/twit_content.html' with twit=twit %}
+                        </div>
+                    </div>
+
+                    {% include 'list_templates/twit/twit_menu.html' with twit_id=twit.id author_id=twit.user.id is_deleted=twit.is_deleted is_remembered=twit.is_remembered%}
+                </div>
+
+                {% if not twit.is_deleted %}
+                    <div class="row  pl-5">
+                        {% include 'shared/../create_template/create_comment.html' with id=twit.id comments=twit.comments %}
+                        {% include 'shared/../create_template/like.html' with data=twit liked=twit.is_liked model='twit' %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+    </div>
+{% endblock %}

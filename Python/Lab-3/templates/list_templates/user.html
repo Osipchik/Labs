@@ -1,0 +1,24 @@
+{% block content  %}
+    <div class="transition twit-block pt-3">
+        <div class="mx-3 row d-flex">
+
+            {% include 'list_templates/../shared/user_image.html' with user=author size=49 %}
+
+            <div class="px-1 flex-grow-1">
+
+                {% include 'list_templates/../shared/title_link.html' with author=author %}
+
+                <div class="row px-3 my-3">
+                    <p class="ml-3 flex-grow-1">{{ author.user_profile.description }}</p>
+                    <div>
+
+                    </div>
+                </div>
+            </div>
+           <div class="my-auto">
+                {% include 'create_template/follow_btn.html' with author=author %}
+           </div>
+        </div>
+        <hr>
+    </div>
+{% endblock %}

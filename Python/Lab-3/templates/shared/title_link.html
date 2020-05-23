@@ -1,0 +1,19 @@
+{% block content  %}
+
+    {% if load_link %}
+        <div id="end-mark-{{ mark_name }}" data-link="{{ load_link }}"></div>
+    {% endif %}
+
+    <div class="pl-3">
+        <a href="{% url 'accounts:profile' id=author.id %}"
+           class="text-dark"
+           data-ajaxlink="{% url 'accounts:profile' id=author.id %}">
+            <strong class="text-truncate">{{ author.first_name }}</strong>
+        </a>
+        {% if author.user_profile.is_official %}
+            <i class="fas fa-check-circle official-badge" data-toggle="tooltip" data-placement="bottom" title="Подтвержденный аккаунт"></i>
+        {% endif %}
+        <span class="text-muted">@{{ author.username }}</span>
+        <small class="text-muted">{{ creation_date }}</small>
+    </div>
+{% endblock %}

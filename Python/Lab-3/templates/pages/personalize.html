@@ -1,0 +1,22 @@
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" type='text/css'>
+
+    <div id="main">
+
+        {% include 'shared/header.html' with title='Персонализация' has_back_button=True %}
+
+        <form action="{% url 'accounts:update_user_image' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label >User name</label>
+                {{ image_form }}
+            </div>
+            <div class="d-flex justify-content-center">
+                <input type="submit" class="btn btn-primary px-auto" value="Сохранить">
+            </div>
+        </form>
+    </div>
+
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

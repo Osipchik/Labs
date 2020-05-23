@@ -1,0 +1,31 @@
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" type='text/css'>
+
+<div class="d-flex justify-content-end">
+    {% if user.is_authenticated %}
+        <button type="button"
+                id="follow-btn"
+                {% if user not in author.followers.all %}
+                    class="transition outline-btn profile-btn hover-blue"
+                data-action="follow"
+                {% else %}
+                    class="transition outline-btn profile-btn hover-red"
+                data-action="unfollow"
+                {% endif %}
+                data-followurl="{% url 'accounts:follow' author_id=author.id %}"
+                data-unfollowurl="{% url 'accounts:unfollow' author_id=author.id %}"
+                onclick="followBtnClickHandler(event)">
+            {% if user not in author.followers.all %}
+                Читать
+            {% else %}
+                Перестать читать
+            {% endif %}
+        </button>
+    {% else %}
+        <a href="{% url 'accounts:login' %}" class="transition outline-btn profile-btn hover-blue">
+            Читать
+        </a>
+    {% endif %}
+</div>
+{% endblock %}

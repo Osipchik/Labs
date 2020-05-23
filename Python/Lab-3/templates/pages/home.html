@@ -1,0 +1,16 @@
+{% block content %}
+    <div id="main">
+
+        {% include 'shared/header.html' with title='Главная' has_back_button=False %}
+
+        <div id="first-line" class="">
+            {% include 'create_template/create_twit.html' with form=form url=url btn_name='Твитнуть'%}
+        </div>
+
+        <div id="data-list">
+            {% for i in twits %}
+                {% include 'list_templates/twit/twit.html' with twit=i%}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

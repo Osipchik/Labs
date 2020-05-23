@@ -1,0 +1,31 @@
+{% load static %}
+{% block content %}
+<div id="main">
+    {% include 'shared/header.html' with title='Поиск' has_back_button=True %}
+
+    <form class="form-inline w-100 d-flex"
+          method="get"
+          action="{% url 'find_by_name' %}"
+          data-byname="{% url 'find_by_name' %}"
+          data-byusername="{% url 'find_by_username' %}"
+          id="search-form">
+        {% csrf_token %}
+        <div class="input-group input-group-sm mb-2 mr-sm-2 pl-3 pr-1 py-2 w-100 col">
+            <div class="input-group-prepend">
+                <i class="fas fa-search input-group-text my-auto"></i>
+            </div>
+            {{ form }}
+        </div>
+
+        <input type="submit" class="btn btn-primary mb-2 col-2" value="Найти">
+    </form>
+
+    <div id="data-list">
+        {% for i in users %}
+            {% include 'list_templates/user.html' with author=i%}
+        {% endfor %}
+    </div>
+</div>
+<script src="{% static 'js/serch.js' %}"></script>
+<script src="{% static 'js/follow.js' %}"></script>
+{% endblock %}

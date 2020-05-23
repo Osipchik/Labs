@@ -1,0 +1,21 @@
+{% block content %}
+    <div id="head" class="row mx-auto border-bottom w-100 bg-white " onclick="headScrollTop()">
+        {% if subtitle != None %}
+            <div class="transition btn-head mx-3 my-auto" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div >
+                <p class="h5 text-truncate"><strong>{{ title }}</strong></p>
+                <small class="text-muted">{{ subtitle }} Твиты Твитов Твитов"></small>
+            </div>
+        {% elif has_back_button %}
+            <div class="transition btn-head mx-3 my-auto" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <p class="h5 mb-2 ml-3 my-auto"><strong>{{ title }}</strong></p>
+        {% else %}
+            <p class="h5 mb-2 mt-2 ml-3"><strong>{{ title }}</strong></p>
+        {% endif %}
+    </div>
+
+{% endblock %}

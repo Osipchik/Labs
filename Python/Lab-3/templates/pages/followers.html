@@ -1,0 +1,14 @@
+{% load static %}
+{% block content %}
+    <div id="main">
+
+        {% include 'shared/header.html' with title='Читатели' has_back_button=True %}
+
+        <div id="followers">
+            {% for i in data %}
+                {% include 'list_templates/user.html' with author=i%}
+            {% endfor %}
+        </div>
+    </div>
+    <script src="{% static 'js/follow.js' %}"></script>
+{% endblock %}

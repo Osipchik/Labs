@@ -1,0 +1,82 @@
+.nav-tabs .nav-link:not(.active) {
+    color: #212121 !important;
+    border-bottom: transparent !important;
+}
+
+
+.nav-tabs .nav-link{
+    color: #1DA1F2 !important;
+    border-bottom: 2px solid #1DA1F2 !important;
+}
+
+.nav-tabs .nav-link:active {
+    color: #212121 !important;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #e3f1fc !important;
+    border-bottom: 2px solid #1DA1F2 !important;
+}
+
+.nav-tabs > li > a {
+    font-weight: bold;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.profile-btn {
+    font-weight: bold!important;
+    margin: 0.8rem 0.8rem 0 0!important;
+}
+
+.modal-header {
+    padding: 1rem 1rem 0.5rem 1rem!important;
+}
+
+.modal-lg {
+    max-width: 40rem!important;
+}
+
+.profile-image-header {
+    width: 100% !important;
+    height: 12.5rem!important;
+    background-color: #ccd6dd;
+}
+
+.profile-header {
+    position: relative;
+}
+
+.profile-header-icon {
+    top: -4.6rem;
+    left: 0.7rem;
+    margin: 0!important;
+    padding: 0!important;
+    border: 4px solid #FFF;
+    display: inline-block;
+
+}
+
+.profile-header-m {
+    margin-bottom: 1.5rem;
+}
+
+
+.alert {
+    position: relative;
+    left: -50%;
+    margin-left: -50px;
+}
+
+.alert-wrapper {
+    z-index: 12!important;
+    position: absolute;
+    left: 50%;
+}
+
+.alert-danger {
+    background-color: #ef5350!important;
+    color: #FFF;
+    border-color: #ef5350!important;
+}

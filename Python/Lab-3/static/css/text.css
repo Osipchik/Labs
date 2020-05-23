@@ -1,0 +1,52 @@
+.title{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+p {
+    margin: 0!important;
+}
+
+.t-s {
+    font-size: 12px!important;
+}
+
+.t-s {
+    font-size: 12px!important;
+}
+
+#head {
+    height: 3rem!important;
+    max-width: 40rem;
+    z-index: 2!important;
+}
+
+.mt-h {
+    margin-top: 4rem;
+}
+
+.text-red {
+    color: #f44336!important;
+}
+
+small, button {
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+}
+
+strong {
+    font-family: 'Rubik', sans-serif;
+}
+
+
+a.nav-link{
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
+
+body {
+     font-family: 'Roboto', sans-serif;
+}
+
+header {
+    font-family: 'Rubik', sans-serif;
+}

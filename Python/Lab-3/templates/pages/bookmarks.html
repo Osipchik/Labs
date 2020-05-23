@@ -1,0 +1,12 @@
+{% block content %}
+<div id="main">
+    {% include 'shared/header.html' with title='Закладки' has_back_button=False subtitle=bookmarks_count%}
+
+    <div id="twits-list">
+        {% for i in twits %}
+            {% include 'list_templates/twit/twit.html' with twit=i%}
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'accounts/_LayoutView.html' %}
+{% block content %}
+
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        {% if field.errors %}<p class="text-danger">{{ field.label }}: {{ field.errors|striptags }}</p>{% endif %}
+    {% endfor %}
+
+    <form action="{% url 'accounts:login' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Имя пользователя</label>
+            {{ form.username }}
+            <div class="text-danger">
+                {{ form.username.errors }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            {{ form.password }}
+            <div class="text-danger">
+                {{ form.password.errors }}
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-primary px-auto font-weight-bold" value="Войти">
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <p>Ещё нет аккайнта? <a href="{% url 'accounts:signup' %}" class="">Зарегестрируйтесь!</a></p>
+    </div>
+{% endblock %}

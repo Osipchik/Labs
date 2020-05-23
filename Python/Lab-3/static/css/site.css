@@ -1,0 +1,286 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: 31%;
+    min-width: 68px;
+    margin: 0!important;
+}
+
+button {
+    cursor: pointer!important;
+}
+
+span, div, small {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+i.ico {
+  margin: auto!important;
+}
+
+label[for='textarea'] {
+    display: none!important;
+}
+
+.asd {
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    margin: 0!important;
+    left: calc(31% + 40rem);
+}
+
+.default {
+    position: fixed!important;
+    top: 0!important;
+}
+
+main {
+    height: inherit;
+    margin-left: 31%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+hr {
+    padding-bottom: 0!important;
+    margin-bottom: 0!important;
+}
+
+.menu{
+    position: relative;
+    width: 235px;
+    min-width: 88px!important;
+    font-size: 20px;
+    margin-left: auto;
+    margin-right: 0!important;
+}
+
+.menu-button{
+    border: none;
+    background: inherit;
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin-bottom: 1.2rem;
+    width: fit-content;
+    height: 3rem;
+}
+
+.px-05{
+    padding: 0 5px 0 5px !important;
+}
+
+.px-20{
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.pl-45 {
+    padding-left: 4.5rem;
+}
+
+.content{
+    max-width: 40rem;
+}
+
+.menu-link{
+    font-weight: 600;
+    color: #212121;
+    text-decoration: none;
+    width: 100%;
+}
+
+.menu-link:hover{
+    text-decoration: none;
+    background-color: #e3f1fc;
+    color: #1DA1F2;
+}
+
+.meu-link-active{
+    text-decoration: none;
+    background-color: #FFF;
+    color: #1DA1F2;
+}
+
+.twit-btn{
+    display: block;
+    width: 100%;
+    text-align: center;
+    border: none;
+    background: inherit;
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin-bottom: 1.2rem;
+    color: #FFF;
+    background-color: #1DA1F2;
+}
+
+.twit-btn:hover{
+    color: #FFF;
+    background-color: #0288D1;
+    text-decoration: none;
+}
+
+.user-dropup{
+    padding: 0 0 0 1rem;
+    flex: 1;
+}
+
+.user {
+    border-radius: 50px;
+    padding: 6px 20px;
+}
+
+.user:hover {
+    background-color: #e3f1fc;
+    cursor: pointer;
+}
+
+.btn-head {
+    color: #1DA1F2;
+    text-decoration: none;
+    border-radius: 50px;
+    padding: 4px 10px!important;
+    font-size: 20px;
+}
+
+.btn-head:hover {
+    background-color: #e3f1fc;
+    color: #1DA1F2;
+    text-decoration: none;
+}
+
+.btn-comment {
+    color: inherit;
+}
+
+
+@media (min-width: 770px) {
+    body{
+        width: 100%;
+    }
+}
+
+.menu-btn-text {
+    margin: 0 1rem 0 1.5rem!important;
+}
+
+@media (max-width: 770px) {
+    header, .menu{
+        width: 11.8%;
+        font-size: 16px!important;
+        min-width: 88px!important;
+    }
+
+
+
+    .sm-center {
+        justify-content: center!important
+    }
+
+    .user {
+        padding: 6px 20px!important;
+    }
+
+    .user-dropup, .btn-text, .twit-btn {
+        display: none!important;
+    }
+
+    .menu-button{
+        width: 3.2rem;
+        height: 3.2rem;
+        padding: 10px;
+    }
+
+    main{
+        margin-left: 88px;
+    }
+
+    .ico {
+        padding-top: 3px;
+    }
+
+    .profile-image-header {
+        width: 100%!important;
+    }
+
+    .menu-btn-text {
+        display: none;
+    }
+}
+
+.btn {
+    border-radius: 50px;
+}
+
+.user-p {
+    margin-bottom: 0!important;
+    font-size: 15px!important;
+}
+
+.twit-block:hover {
+    background-color: #F5F8FA!important;
+    cursor: pointer;
+}
+
+.dropdown-item:active {
+    background-color: #E1E8ED!important;
+}
+
+.accent-blue{
+    color: #1DA1F2;
+}
+
+.upload-container label:hover {
+     cursor: pointer;
+}
+
+.upload-container div form {
+     position: relative;
+     z-index: 10;
+}
+
+.upload-container input[type=file] {
+     width: 0.1px;
+     height: 0.1px;
+     opacity: 0;
+     position: absolute;
+     z-index: -10;
+}
+
+.container-twit-image {
+    position: relative;
+    width: 30rem;
+    height: 20rem;
+    border-radius: 22px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.twit-image, #tweet-image {
+    object-fit: cover!important;
+    width: 100%;
+    height: 100%;
+}
+
+.delete-icon {
+    cursor: pointer;
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    padding: 0.82rem 1rem;
+    background-color: #424242;
+    opacity: 0.2;
+    color: #FFF;
+}
+
+.delete-icon:hover {
+    opacity: 1;
+}

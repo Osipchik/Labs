@@ -1,0 +1,18 @@
+{% block content  %}
+
+    {% if user.is_authenticated  %}
+        <a href="{% url 'twit_detail' twit_id=id %}"
+           data-ajaxlink="{% url 'twit_detail' twit_id=id %}"
+           class="row btn-comment icon transition hover-blue mr-auto">
+            <i class="far fa-comment my-auto"></i>
+            <small class="ml-2 my-auto">{{ comments.count }}</small>
+        </a>
+    {% else %}
+        <a href="{% url 'accounts:login' %}"
+           class="row btn-comment icon transition hover-blue mr-auto">
+            <i class="far fa-comment my-auto"></i>
+            <small class="ml-2 my-auto">{{ comments.count }}</small>
+        </a>
+    {% endif %}
+
+{% endblock %}

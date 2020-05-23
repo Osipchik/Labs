@@ -1,0 +1,60 @@
+{% block content  %}
+<div class="flex-grow-0 mr-3 text-center" id="twit-menu-{{ twit_id }}">
+    <div>
+        <i class="fas fa-ellipsis-v transition icon text-muted hover-blue"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false"
+        ></i>
+        <div class="dropdown-menu dropdown-menu-right">
+            {% if is_remembered %}
+                <div class="dropdown-item hover-blue transition"
+                     onclick="removeBookmark(event, {{ twit_id }}, `{% url 'remove_bookmark' twit_id=twit_id %}`)"
+                    id="remove-bookmark-{{ twit_id }}">
+                    <div class="row ">
+                        <i class="fas fa-bookmark my-auto"></i>
+                        <span class="pl-3">Удалить из закладок</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="dropdown-item hover-blue transition"
+                     onclick="addBookmark(event, {{ twit_id }}, `{% url 'add_bookmark' twit_id=twit_id %}`)"
+                     id="add-bookmark-{{ twit_id }}">
+                    <div class="row ">
+                        <i class="far fa-bookmark my-auto"></i>
+                        <span class="pl-3">Добавить в закладки</span>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if user.is_authenticated and user.id == author_id%}
+                {% if is_deleted %}
+                    <div class="dropdown-item hover-blue transition"
+                         onclick="deleteTwit(event, {{ twit_id }}, `{% url 'restore_twit' twit_id=twit_id %}`)">
+                        <div class="row">
+                            <i class="fas fa-undo-alt my-auto"></i>
+                            <span class="pl-3">Восстановить</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="dropdown-item hover-red transition"
+                     onclick="deleteTwit(event, {{ twit_id }}, `{% url 'delete_twit' twit_id=twit_id %}`)">
+                    <div class="row">
+                        <i class="far fa-trash-alt my-auto"></i>
+                        <span class="pl-3">Удалить</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if is_remembered %}
+        <i class="fas fa-bookmark transition icon text-muted hover-blue py-2"
+           onclick="removeBookmark(event, {{ twit_id }}, `{% url 'remove_bookmark' twit_id=twit_id %}`)"
+           id="bookmark-icon-{{ twit_id }}"
+           data-toggle="tooltip" data-placement="bottom" title="Удалить из закладок"
+        ></i>
+    {% endif %}
+</div>
+{% endblock %}

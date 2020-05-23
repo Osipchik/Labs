@@ -1,0 +1,28 @@
+{% block content  %}
+    <div class="flex-grow-1 upload-container " >
+        <form id="upload-{{ image_type }}"
+              method="POST"
+              class="upload-container"
+              data-url="{% url 'accounts:update_image' image_type %}"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="upload-container">
+                <input id="{{ image_type }}"
+                       type="file"
+                       name="file"
+                       data-url="{% url 'accounts:update_image' image_type %}"
+                       accept="image/gif, image/jpeg, image/png, image/webp"
+                       onchange="onpProfileImageChanged(event)"
+                >
+                <label for="{{ image_type }}" class="outline-btn hover-blue transition">
+                    <strong>Выберите файл</strong>
+                </label>
+                <button class="outline-btn hover-red transition ml-3"
+                        data-id="{{ image_type }}"
+                        onclick="deleteUserImage(event)">
+                    <strong data-id="{{ image_type }}">Удалить</strong>
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

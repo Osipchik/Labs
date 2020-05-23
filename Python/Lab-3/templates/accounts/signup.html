@@ -1,0 +1,47 @@
+{% extends 'accounts/_LayoutView.html' %}
+{% block content %}
+
+    {{ form.non_field_errors }}
+{#    {% for field in form %}#}
+{#        {% if field.errors %}<p class="text-danger">{{ field.label }}: {{ field.errors|striptags }}</p>{% endif %}#}
+{#    {% endfor %}#}
+
+    <form action="{% url 'accounts:signup' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">Ваше имя</label>
+            {{ form.first_name }}
+            <div class="text-danger">
+                {{ form.first_name.errors }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="username">Имя пользователя</label>
+            {{ form.username }}
+            <div class="text-danger">
+                {{ form.username.errors }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            {{ form.email }}
+            <div class="text-danger">
+                {{ form.email.errors }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password1">Пароль</label>
+            {{ form.password1 }}
+            <div class="text-danger">
+                {{ form.password1.errors }}
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-primary px-auto font-weight-bold" value="Зарегестрироваться">
+        </div>
+
+    </form>
+    <div class="text-center mt-3">
+        <p>Уже есть аккаунт? <a href="{% url 'accounts:login' %}" class="">Войдите!</a></p>
+    </div>
+{% endblock %}

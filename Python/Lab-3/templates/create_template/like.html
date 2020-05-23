@@ -1,0 +1,20 @@
+{% block content  %}
+    {% if liked %}
+        <div class="row my-auto icon transition hover-red mr-auto text-red"
+             data-id="{{ data.id }}"
+             data-like="{{ model }}"
+             onclick="setLike(event)">
+            <li class="fas fa-heart my-auto" data-icon="like"></li>
+            <small class="ml-2 my-auto" data-count="like">{{ data.likes.count }}</small>
+        </div>
+    {% else %}
+        <div class="row my-auto icon transition hover-red mr-auto"
+             data-id="{{ data.id }}"
+             data-like="{{ model }}"
+             onclick="setLike(event)">
+            <li class="far fa-heart my-auto" data-icon="like"></li>
+            <small class="ml-2 my-auto" data-count="like">{{ data.likes.count }}</small>
+        </div>
+    {% endif %}
+
+{% endblock %}
